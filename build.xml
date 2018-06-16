@@ -91,7 +91,7 @@
 
     <target name="get-build-properties" hidden="true">
         <property file="build.properties" override="true"/>
-        <property name="store.build.properties" value="true"/>
+        <property name="store.build.properties" value="false"/>
         <if>
             <equals arg1="${gpg.user}" arg2=""/>
             <then>
