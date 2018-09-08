@@ -71,6 +71,7 @@
             </then>
             <else>
                 <exec executable="gpg" passthru="true">
+                    <arg value="--yes"/>
                     <arg value="--local-user"/>
                     <arg value="${gpg.user}"/>
                     <arg value="--armor"/>
