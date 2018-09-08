@@ -12,7 +12,7 @@ A skeleton for an extension for [PHPUnit](https://phpunit.de/).
 Use [Composer](https://getcomposer.org/) to create a new extension project from this skeleton. 
 
 ```
-$ composer create-project thomasweinert/phpunit-example-extension your-awesome-extension
+$ composer create-project thomasweinert/phpunit-extension-skeleton your-awesome-extension
 ```
 
 Go into the new project directory.
