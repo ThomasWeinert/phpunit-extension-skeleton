@@ -27,18 +27,22 @@
             subject="${composer.name}"
             match="$1"
             defaultvalue="phpunit-extension"/>
+        <condition property="project.version.suffix" else="-${project.version}" value="">
+            <equals arg1="${project.version}" arg2=""/>
+        </condition>
         <property name="build.directory" value="${project.basedir}/build"/>
-        <property name="build.target" value="${build.directory}/${extension.name}"/>
+        <property name="build.target" value="${build.directory}/files"/>
+        <property name="build.target.package" value="${build.directory}/${extension.name}${project.version.suffix}.phar"/>
 
-        <copy todir="${build.directory}" file="${project.basedir}/LICENSE" />
-        <copy todir="${build.target}">
+        <copy todir="${build.target}" file="${project.basedir}/LICENSE" />
+        <copy todir="${build.target}/${extension.name}">
             <fileset dir="${project.basedir}/src">
                 <include name="**/*" />
                 <exclude name="**/README.md" />
             </fileset>
         </copy>
 
-        <create-phive-manifest manifestFile="${build.directory}/manifest.xml" version="${project.version}"/>
+        <create-phive-manifest manifestFile="${build.target}/manifest.xml" version="${project.version}"/>
 
         <exec executable="${project.basedir}/tools/phpab">
             <arg value="--all" />
@@ -46,26 +50,34 @@
             <arg value="--once" />
             <arg value="--phar" />
             <arg value="--output" />
-            <arg path="${build.target}-${project.version}.phar" />
-            <arg path="${build.directory}" />
+            <arg path="${build.target.package}" />
+            <arg path="${build.target}" />
         </exec>
 
         <delete includeemptydirs="true">
             <fileset dir="${build.directory}">
                 <include name="**/*"/>
-                <exclude name="${extension.name}-${project.version}.phar"/>
+                <exclude name="*.phar"/>
             </fileset>
         </delete>
     </target>
 
     <target name="package" depends="build,get-build-properties" description="Build phar and create signature">
-        <exec executable="gpg" passthru="true">
-            <arg value="- -local-user"/>
-            <arg value="${gpg.user}"/>
-            <arg value="- -armor"/>
-            <arg value="- -detach-sign"/>
-            <arg path="${build.target}-${project.version}.phar"/>
-        </exec>
+        <if>
+            <equals arg1="${gpg.user}" arg2=""/>
+            <then>
+               <warn message="No GPG user provided, can not sign package."/>
+            </then>
+            <else>
+                <exec executable="gpg" passthru="true">
+                    <arg value="--local-user"/>
+                    <arg value="${gpg.user}"/>
+                    <arg value="--armor"/>
+                    <arg value="--detach-sign"/>
+                    <arg path="${build.target.package}" />
+                </exec>
+            </else>
+        </if>
     </target>
 
     <target name="prepare" unless="prepare.done" description="Prepare for build" hidden="yes">
@@ -74,6 +86,7 @@
     </target>
 
     <target name="get-version-number-from-git" hidden="yes">
+        <property name="project.version" value=""/>
         <trycatch property="error.message">
             <try>
                 <exec executable="git" outputProperty="git.version" checkreturn="true" dir="${project.basedir}">
@@ -90,6 +103,7 @@
     </target>
 
     <target name="get-build-properties" hidden="true">
+        <property name="gpg.user" value=""/>
         <property file="build.properties" override="true"/>
         <property name="store.build.properties" value="false"/>
         <if>
