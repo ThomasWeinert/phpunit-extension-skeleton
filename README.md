@@ -27,6 +27,8 @@ Install tools used to build and package your extension using Phive.
 $ phive install
 ```
 
+Start adding new 
+
 ## Build Targets
 
 The repository includes a [Phing](https://www.phing.info/) build file. Phive installs
@@ -38,7 +40,9 @@ Phing and the other tools into the `tools/` subdirectory.
 $ tools/phing build
 ```
 
-Create a Phar package for the extension.
+Create a Phar package for the extension. The phar will be put into the `build/` directory. The name and information
+for a Phive `manifest.xml` will be read from the `composer.json`. The latest tag from current Git branch will
+be used as version number.
 
 ### clean
 
@@ -54,7 +58,8 @@ Delete build artifacts.
 $ tools/phing package
 ```
 
-Create a Phar package for the extension and sign it using GPG.
+Create a Phar package for the extension and sign it using GPG. the first time you will be asked 
+GPG user. The user will be stored in the `build.properties` file.
 
 ### reformat
 
