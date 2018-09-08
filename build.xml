@@ -58,6 +58,7 @@
             <fileset dir="${build.directory}">
                 <include name="**/*"/>
                 <exclude name="*.phar"/>
+                <exclude name="*.phar.asc"/>
             </fileset>
         </delete>
     </target>
@@ -241,4 +242,3 @@
     </adhoc-task>
 
 </project>
-
