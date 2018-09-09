@@ -1,6 +1,9 @@
 # PHPUnit Extension Skeleton
 
-A skeleton for an extension for [PHPUnit](https://phpunit.de/).
+A skeleton for an extension for [PHPUnit](https://phpunit.de/). It provides the necessary files and build scripts.
+The ["Hello World" example](https://github.com/ThomasWeinert/phpunit-extension-skeleton-example) is based on the 
+skeleton and implements a simple constraint and assertion for PHPUnit.
+.
 
 ## Requirements
 
